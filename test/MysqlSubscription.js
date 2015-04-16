@@ -264,3 +264,23 @@ function(test, done){
     }, POLL_WAIT);
   }, POLL_WAIT);
 });
+
+Tinytest.addAsync(SUITE_PREFIX + 'Change Ready',
+function(test, done) {
+  test.equal(players.length, expectedRows.length);
+
+  Tracker.autorun(Meteor.bindEnvironment(
+  function(c) {
+    //players.depend();
+    if(players.ready()) {
+      test.equal(players.length, 2);
+      if(!c.firstRun) {
+        // Reset it back to full length
+        players.change();
+        done();
+      }
+    }
+  }));
+
+  players.change(2);
+});
